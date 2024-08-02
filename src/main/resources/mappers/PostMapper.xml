@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.aarcs.mappers.db.PostDbMapper">
+
+    <resultMap id="PostData" type="com.app.aarcs.controller.responses.posts.PostData">
+        <result property="id" column="id" />
+        <result property="pic" column="pic" />
+        <result property="title" column="title" />
+        <result property="summary" column="summary" />
+        <result property="username" column="username" />
+        <result property="postDate" column="post_date" />
+        <result property="commentCount" column="comment_count" />
+    </resultMap>
+    <insert id="insert" parameterType="com.app.aarcs.model.Posts">
+        Insert into posts(title, summary, user_id, pic) values(#{title}, #{summary}, (Select id from users where SHA2(id, 256) = #{userId}), #{pic})
+    </insert>
+
+    <select id="getAll" resultMap="PostData">
+        Select SHA2(id, 256) as id, title, summary, pic, (Select username from users where users.id = posts.user_id) as username, post_date, (Select count(*) from comments where post_id = posts.id) as comment_count from posts order by post_date desc;
+    </select>
+
+    <update id="updatePost">
+        Update posts set title = #{title}, summary = #{summary} where SHA2(id, 256) = #{id} and SHA2(user_id, 256) = #{userId}
+    </update>
+
+    <delete id="deletePost" parameterType="com.app.aarcs.model.Posts">
+        Delete from posts where SHA2(id, 256) = #{id} and SHA2(user_id, 256) = #{userId}
+    </delete>
+</mapper>

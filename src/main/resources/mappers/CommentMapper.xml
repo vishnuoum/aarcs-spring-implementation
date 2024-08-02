@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.aarcs.mappers.db.CommentDbMapper">
+
+    <resultMap id="CommentData" type="com.app.aarcs.controller.responses.comments.CommentData">
+        <result property="id" column="id" />
+        <result property="response" column="response" />
+        <result property="enabled" column="enabled" />
+        <result property="username" column="username" />
+        <result property="commentDate" column="comment_date" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.app.aarcs.model.Comment">
+        Insert into comments(response, user_id, post_id) values(#{response}, (Select id from users where SHA2(id, 256) = #{userId}), (Select id from posts where SHA2(id, 256) = #{postId}))
+    </insert>
+
+    <update id="updateComment" parameterType="com.app.aarcs.model.Comment">
+        Update comments set response = #{response} where SHA2(id, 256) = #{id} and SHA2(user_id, 256) = #{userId} and SHA2(post_id, 256) = #{postId}
+    </update>
+
+    <delete id="deleteComment" parameterType="com.app.aarcs.model.Comment">
+        Delete from comments where SHA2(id, 256) = #{id} and SHA2(user_id, 256) = #{userId} and SHA2(post_id, 256) = #{postId}
+    </delete>
+
+    <select id="getComments" parameterType="com.app.aarcs.model.Comment" resultMap="CommentData">
+        Select SHA2(id, 256) as id, response,IF(SHA2(user_id, 256)=#{userId}, true, false) as enabled, (Select username from users where users.id = comments.user_id) as username, comment_date from comments where SHA2(post_id, 256) = #{id}
+    </select>
+</mapper>

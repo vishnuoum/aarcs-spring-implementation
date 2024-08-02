@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.aarcs.mappers.db.MarketDbMapper">
+
+    <resultMap id="MarketData" type="com.app.aarcs.controller.responses.markets.MarketData">
+        <result property="id" column="id" />
+        <result property="product" column="product" />
+        <result property="username" column="username" />
+        <result property="phone" column="phone" />
+        <result property="postDate" column="post_date" />
+        <result property="amount" column="amount" />
+        <result property="address" column="address" />
+        <result property="pic" column="pic" />
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.app.aarcs.model.Market">
+        Insert into market(product, user_id, amount, address, pic) values(#{product}, (Select id from users where SHA2(id, 256) = #{userId}), #{amount}, #{address}, #{pic})
+    </insert>
+
+    <update id="updateProduct" parameterType="com.app.aarcs.model.Market">
+        Update market set product = #{product} , amount = #{amount}, address = #{address}, enabled = #{enabled} where SHA2(user_id,256) = #{userId} and SHA2(id, 256) = #{id};
+    </update>
+
+    <select id="getAll" resultMap="MarketData">
+        Select SHA2(market.id, 256) as id, market.product, users.username, users.phone, market.post_date, market.amount, market.address, market.pic from market inner join users on market.user_id = users.id and market.enabled = true;
+    </select>
+
+    <delete id="deleteProduct" parameterType="com.app.aarcs.model.Market">
+        Delete from market where SHA2(id, 256) = #{id} and SHA2(user_id, 256) = #{userId}
+    </delete>
+</mapper>

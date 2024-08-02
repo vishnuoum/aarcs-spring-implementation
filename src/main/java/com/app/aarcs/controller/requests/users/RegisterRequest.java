@@ -1,13 +1,12 @@
-package com.app.aarcs.model;
+package com.app.aarcs.controller.requests.users;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class User {
+public class RegisterRequest {
 
-	private Integer id;
 	private String username;
 	private String phone;
 	private String mail;

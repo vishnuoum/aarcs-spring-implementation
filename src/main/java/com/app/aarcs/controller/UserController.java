@@ -1,39 +1,37 @@
 package com.app.aarcs.controller;
 
-import com.app.aarcs.model.User;
-import com.app.aarcs.sqlMappers.UserMapper;
-import com.app.aarcs.util.Util;
+import com.app.aarcs.controller.requests.users.LoginRequest;
+import com.app.aarcs.controller.requests.users.RegisterRequest;
+import com.app.aarcs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserMapper userMapper;
+	private final UserService userService;
 
-    @GetMapping("/listUsers")
-    public List<User> listUsers() {
-        return userMapper.getAllUsers();
-    }
+	@Autowired
+	private UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        return new ResponseEntity<>(Util.convertToSHA1(userMapper.register(user).toString()), HttpStatus.CREATED);
-    }
+	@PostMapping("/register")
+	public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+		return new ResponseEntity<>(userService.register(request), HttpStatus.CREATED);
+	}
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        return new ResponseEntity<>(Util.convertToSHA1(userMapper.login(user).toString()), HttpStatus.ACCEPTED);
-    }
-
-    @PostMapping("/getUser")
-    public ResponseEntity<User> getUser(@RequestBody String id) {
-        return new ResponseEntity<>(userMapper.getUser(id), HttpStatus.OK);
-    }
+	@PostMapping("/login")
+	public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+		return new ResponseEntity<>(userService.login(request), HttpStatus.OK);
+	}
 }

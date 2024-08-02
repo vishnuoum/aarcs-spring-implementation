@@ -1,29 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.app.aarcs.sqlMappers.UserMapper">
-
-    <resultMap id="User" type="com.app.aarcs.model.User">
-        <id property="id" column="id" />
-        <result property="name" column="name" />
-        <result property="phone" column="phone" />
-        <result property="password" column="password" />
-    </resultMap>
-
-    <select id="getAllUsers" resultMap="User">
-        SELECT * FROM users
-    </select>
-
-    <insert id="register" parameterType="com.app.aarcs.model.User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        INSERT INTO users (name, phone, password) VALUES (#{name}, #{phone}, sha1(#{password}))
+<mapper namespace="com.app.aarcs.mappers.db.UserDbMapper">
+    <insert id="insert" parameterType="com.app.aarcs.model.User" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        Insert into users(username, phone, mail, password) values(#{username}, #{phone}, #{mail}, #{password})
     </insert>
 
-    <select id="login" parameterType="com.app.aarcs.model.User" resultType="Integer">
-        SELECT id FROM users where phone=#{phone} and password=sha1(#{password})
-    </select>
-
-    <select id="getUser" parameterType="String" resultMap="User">
-        SELECT name, phone FROM users where sha1(id) = #{id}
+    <select id="login" parameterType="com.app.aarcs.model.User" resultType="com.app.aarcs.model.User">
+        Select id, password from users where phone = #{phone} or mail = #{mail}
     </select>
 </mapper>
