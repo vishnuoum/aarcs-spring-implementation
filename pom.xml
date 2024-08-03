@@ -36,7 +36,7 @@
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
-<!-- DB Dependencies-->
+<!-- DB Dependencies -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
@@ -60,18 +60,33 @@
 			<optional>true</optional>
 		</dependency>
 
-<!-- Mapstruct-->
+<!-- Mapstruct -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>
 		</dependency>
 
-<!-- Open API-->
+<!-- Open API -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${open-api.version}</version>
+		</dependency>
+
+<!-- Spring security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>oauth2-oidc-sdk</artifactId>
+			<version>11.14</version>
 		</dependency>
 
 <!-- Test Dependencies -->
